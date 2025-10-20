@@ -4,6 +4,9 @@ Simple FastAPI app that returns all request information received.
 Used to test what headers and IPs appear for external vs internal VPC requests.
 """
 
+import asyncio
+import random
+import socket
 from fastapi import FastAPI, Request
 from typing import Dict, Any
 
@@ -27,6 +30,13 @@ async def diagnostic(request: Request) -> Dict[str, Any]:
 
     Used to determine what App B sees when called externally vs internally.
     """
+    # Get this pod's hostname
+    app_b_pod_name = socket.gethostname()
+
+    # Simulate random load (1-3 second delay)
+    app_b_delay = random.randint(1, 3)
+    await asyncio.sleep(app_b_delay)
+
     # Get client IP
     client_ip = request.client.host if request.client else "unknown"
 
@@ -44,6 +54,8 @@ async def diagnostic(request: Request) -> Dict[str, Any]:
 
     return {
         "app": "test-header-b",
+        "app_b_pod_name": app_b_pod_name,
+        "app_b_delay_seconds": app_b_delay,
         "client_ip": client_ip,
         "specific_headers": specific_headers,
         "all_headers": all_headers,
