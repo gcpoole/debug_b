@@ -33,8 +33,8 @@ async def diagnostic(request: Request) -> Dict[str, Any]:
     # Get this pod's hostname
     app_b_pod_name = socket.gethostname()
 
-    # Simulate random load (1-3 second delay)
-    app_b_delay = random.randint(1, 3)
+    # Simulate random load (1-10 second delay)
+    app_b_delay = random.randint(1, 10)
     await asyncio.sleep(app_b_delay)
 
     # Get client IP
